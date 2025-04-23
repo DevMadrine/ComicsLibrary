@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +9,11 @@ plugins {
 //    id("com.google.devtools.ksp")
 //    id 'kotlin-kapt'
 //    id 'com.google.dagger.hilt.android'
+}
+
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties().apply{
+    load(FileInputStream(apikeyPropertiesFile))
 }
 
 android {
@@ -20,9 +28,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "MARVEL_KEY", "\"${apikeyProperties["MARVEL_KEY"]}\"")
+        buildConfigField("String", "MARVEL_SECRET", "\"${apikeyProperties["MARVEL_SECRET"]}\"")
+
     }
 
-    buildTypes {
+        buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(
