@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.hilt.plugin)
+
+    kotlin("kapt")
 //    id("com.google.devtools.ksp")
 //    id 'kotlin-kapt'
 //    id 'com.google.dagger.hilt.android'
@@ -28,9 +31,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "MARVEL_KEY", "\"${apikeyProperties["MARVEL_KEY"]}\"")
-        buildConfigField("String", "MARVEL_SECRET", "\"${apikeyProperties["MARVEL_SECRET"]}\"")
-
+        buildConfigField(
+            "String",
+            "MARVEL_KEY",
+            "\"${apikeyProperties.getProperty("MARVEL_KEY").trim()}\""
+        )
+        buildConfigField(
+            "String",
+            "MARVEL_SECRET",
+            "\"${apikeyProperties.getProperty("MARVEL_SECRET").trim()}\""
+        )
     }
 
         buildTypes {
@@ -57,17 +67,27 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
+    buildFeatures{
+        buildConfig = true
+    }
+
 }
 
 dependencies {
     ksp(libs.androidx.room.compiler)
-    ksp(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.android)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.56.2")
+
     implementation(libs.androidx.material)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.navigation.compose)
+
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.converter.gson)
     implementation(libs.androidx.retrofit)
@@ -80,6 +100,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation("com.google.dagger:hilt-android:2.56.2")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -87,4 +109,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

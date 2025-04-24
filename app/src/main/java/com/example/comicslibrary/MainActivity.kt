@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +20,8 @@ import com.example.comicslibrary.ui.theme.ComicsLibraryTheme
 import com.example.comicslibrary.view.CharactersBottomNav
 import com.example.comicslibrary.view.CollectionScreen
 import com.example.comicslibrary.view.LibraryScreen
+import com.example.comicslibrary.viewmodel.LibraryApiViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 sealed class Destination(val route:String){
@@ -30,8 +33,10 @@ sealed class Destination(val route:String){
 
 }
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val lvm by viewModels<LibraryApiViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +46,7 @@ class MainActivity : ComponentActivity() {
                  modifier = Modifier.fillMaxSize(),
                  color = MaterialTheme.colorScheme.background
              ){
-                CharactersScaffold(navController = rememberNavController())
+                CharactersScaffold(navController = rememberNavController(), lvm)
              }
             }
         }
@@ -49,7 +54,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CharactersScaffold(navController: NavHostController){
+fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewModel){
     Scaffold(
         bottomBar = {
 CharactersBottomNav(navController = navController)
@@ -63,7 +68,7 @@ CharactersBottomNav(navController = navController)
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Destination.Library.route){
-                LibraryScreen()
+                LibraryScreen(navController, lvm, paddingValues=innerPadding)
             }
 
             composable(Destination.Collection.route){
