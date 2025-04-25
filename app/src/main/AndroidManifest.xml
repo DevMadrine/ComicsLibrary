@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" package="com.example.comicslibrary">
     
     
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application
-        android:name="ComicsApplication"
+        android:name=".ComicsApplication"
         android:usesCleartextTraffic = "true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
